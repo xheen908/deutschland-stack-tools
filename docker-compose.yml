@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  dst-api:
+    image: ghcr.io/xheen908/deutschland-stack-tools:latest
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - MAX_FILE_SIZE=52428800
+      - RATE_LIMIT_MAX=100
+      - LOG_LEVEL=info
+    volumes:
+      - /tmp/dst-uploads:/tmp/uploads
+    restart: unless-stopped
+    mem_limit: 512m
+    cpus: '1.0'
