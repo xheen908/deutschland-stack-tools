@@ -30,8 +30,12 @@ We built the tollbooth for digital sovereignty. Ready to deploy.
 
 ### Docker (30 seconds)
 ```bash
+# Standard validation server
 docker run -p 3000:3000 ghcr.io/xheen908/deutschland-stack-tools:latest
 curl -F "file=@dokument.odt" http://localhost:3000/api/v1/validate
+
+# WITH AI OCR Engine enabled (requires local Ollama on Mac/Windows)
+docker run -p 3000:3000 -e OLLAMA_API_URL="http://host.docker.internal:11434/api/generate" ghcr.io/xheen908/deutschland-stack-tools:latest
 ```
 
 ### CLI
@@ -104,7 +108,7 @@ We believe in radical transparency. The EU mandate requires 100% reliable enforc
 ```text
 =============================================
 Deutschland-Stack-Tools E2E Testsuite
-API URL: http://localhost:3000/api/v1/validate
+API Base URL: http://localhost:3000/api/v1
 =============================================
 Lade Testdateien herunter...
 Starte Tests...
@@ -113,9 +117,10 @@ Test: Unsupported File Format ... ✅ BESTANDEN (UNSUPPORTED_FORMAT erkannt)
 Test: Fake PDF (Parsing Fehler) ... ✅ BESTANDEN
 Test: Echtes PDF (aber nicht PDF/UA) ... ✅ BESTANDEN
 Test: Echtes ODT (Sollte Valid oder Warning sein) ... ✅ BESTANDEN
+Test: WBA OCR API Endpoint ... ✅ BESTANDEN (JSON extrahiert)
 ---------------------------------------------
 Tests abgeschlossen.
-✅ Bestanden: 4
+✅ Bestanden: 5
 ```
 
 ---
