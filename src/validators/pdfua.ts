@@ -53,6 +53,18 @@ const parsePdfUaOutput = (stdout: string, stderr: string): PdfUaValidationResult
     // result.jobs[0].validationReport.profileName
 
     const job = result.jobs?.[0];
+    
+    if (job && job.taskException) {
+      return {
+        performed: true,
+        valid: false,
+        errors: [{
+          message: job.taskException.exceptionMessage || 'PDF parsing failed (invalid file)',
+          severity: 'error'
+        }],
+      };
+    }
+
     if (!job || !job.validationReport) {
        return {
          performed: true,
