@@ -1,7 +1,8 @@
 # 🇩🇪 deutschland-stack-tools
 
-> ODF & PDF/UA compliance validator for Germany's 2028 open-source mandate.
-> Built in 48 hours by one developer. Free. Open Source. Self-hostable.
+> **The automated compliance bouncer for the German government.**
+> Built in 168 minutes to solve the EU's PDF/UA and ODF bottleneck.
+> Free. Open Source. Self-hostable.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](https://ghcr.io/xheen908/deutschland-stack-tools)
@@ -10,14 +11,18 @@
 
 ---
 
-## Why this exists
+## The 168-Minute Story 🚀
 
-On June 18, 2026, Germany's federal and state governments agreed on the 
-"Deutschland-Stack" — mandating ODF and PDF/UA as the only permitted document 
-formats for all public administration by 2028.
+On June 18, 2026, the German federal and state governments celebrated a "breakthrough" for the **Deutschland-Stack**: Mandating true digital sovereignty (ODF) and full EU accessibility (PDF/UA) for all public documents. 
 
-Thousands of agencies now need a way to validate compliance.
-This tool does exactly that.
+But enforcing this at scale is a massive infrastructure problem. How do you automatically prevent millions of proprietary or non-accessible documents from entering government systems? Experts warned: *"The mandate must be accompanied by strict quality criteria, otherwise we force authorities to use unfit solutions."*
+
+**The solution didn't take a million-euro 3-year government project.**
+It took 168 minutes on a Sunday afternoon.
+
+`deutschland-stack-tools` is the missing bridge: A lightning-fast, dockerized Node.js Microservice wrapping the official validation engines (veraPDF & ODF-Toolkit). It acts as the **automated bouncer (Türsteher)** for any government CMS or portal. If a document lacks alt-texts for the blind or secretly hides proprietary code, the API blocks the upload in milliseconds.
+
+We built the tollbooth for digital sovereignty. Ready to deploy.
 
 ---
 
