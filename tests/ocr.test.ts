@@ -1,13 +1,18 @@
 import { extractWBA } from '../src/ocr/wba-extractor';
 import path from 'path';
 
-describe('WBA OCR Extraction Engine (E2E)', () => {
+const describeOrSkip = process.env.CI ? describe.skip : describe;
+
+describeOrSkip('WBA OCR Extraction Engine (E2E)', () => {
   // Set timeout to 5 minutes as LLaMA-Vision takes time to process 6 pages locally
   jest.setTimeout(300000);
 
   it('should extract correct WBA schema from test PDF', async () => {
     const pdfPath = path.join(__dirname, 'fixtures', 'wba-dummy.pdf');
     const result = await extractWBA(pdfPath);
+
+    console.log('✅ Extracted WBA JSON Data from Test:');
+    console.log(JSON.stringify(result, null, 2));
 
     // Validate the overarching structure exists
     expect(result).toBeDefined();
