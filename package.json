@@ -6,7 +6,7 @@
     "dst": "./bin/dst"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp src/ocr/*.py dist/ocr/ 2>/dev/null || true",
     "dev": "ts-node src/index.ts serve",
     "serve": "node dist/index.js serve",
     "test": "jest --coverage",
@@ -21,7 +21,8 @@
     "commander": "^12.x",
     "fastify": "^4.x",
     "pino": "^9.x",
-    "pino-pretty": "^11.x"
+    "pino-pretty": "^11.x",
+    "puppeteer": "^25.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
