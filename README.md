@@ -1,5 +1,12 @@
 # 🇩🇪 deutschland-stack-tools
 
+[🇺🇸 English](#english) | [🇩🇪 Deutsch](#deutsch)
+
+---
+
+<a name="english"></a>
+## 🇺🇸 English
+
 > **The automated compliance bouncer for the German government.**
 > Built in 168 minutes to solve the EU's PDF/UA and ODF bottleneck.
 > Free. Open Source. Self-hostable.
@@ -9,9 +16,7 @@
 [![Tests](https://img.shields.io/badge/tests-passing-success.svg)](#)
 [![Built for Deutschland-Stack](https://img.shields.io/badge/built%20for-Deutschland--Stack-black)](#)
 
----
-
-## The 168-Minute Story 🚀
+### The 168-Minute Story 🚀
 
 On June 18, 2026, the German federal and state governments celebrated a "breakthrough" for the **Deutschland-Stack**: Mandating true digital sovereignty (ODF) and full EU accessibility (PDF/UA) for all public documents. 
 
@@ -24,11 +29,9 @@ It took 168 minutes on a Sunday afternoon.
 
 We built the tollbooth for digital sovereignty. Ready to deploy.
 
----
+### Quick Start
 
-## Quick Start
-
-### Docker (30 seconds)
+#### Docker (30 seconds)
 ```bash
 # Standard validation server
 docker run -p 3000:3000 ghcr.io/xheen908/deutschland-stack-tools:latest
@@ -38,7 +41,7 @@ curl -F "file=@dokument.odt" http://localhost:3000/api/v1/validate
 docker run -p 3000:3000 -e OLLAMA_API_URL="http://host.docker.internal:11434/api/generate" ghcr.io/xheen908/deutschland-stack-tools:latest
 ```
 
-### CLI
+#### CLI
 ```bash
 npm install -g deutschland-stack-tools
 dst validate dokument.odt
@@ -49,12 +52,105 @@ dst batch ./dokumente/ --report report.json
 dst ocr wba ./test-real-wba-scanned.pdf
 ```
 
+### 🤖 WBA AI OCR Engine (New!)
+
+Manually typing in government forms costs millions of taxpayer euros. `deutschland-stack-tools` now comes with a built-in, **autonomous AI Vision Engine** for data extraction, specifically optimized for the **"Weiterbewilligungsantrag SGB II" (WBA)** welfare form.
+
+- **100% GDPR-Compliant:** Data (like IDs, addresses, income) never leaves the server. There is no cloud API.
+- **Local AI:** Uses [Ollama](https://ollama.com/) and the 11B parameter `llama3.2-vision` model directly via `localhost:11434`.
+- **Page-by-Page Extraction:** Bypasses the context limit of open-source vision models via iterative prompting per page and merges the results into a machine-readable JSON.
+- **Handwriting Correction:** Detects checked boxes and automatically corrects typical AI reading errors in German handwriting.
+
+```bash
+dst ocr wba ./scanned_form.pdf
+```
+
+### What it validates
+
+| Standard | Details |
+|----------|---------|
+| ODF 1.2 / 1.3 / 1.4 | .odt, .ods, .odp |
+| PDF/UA-1 (ISO 14289-1) | Matterhorn Protocol, 136 checks |
+| PDF/UA-2 (ISO 14289-2) | Latest accessibility standard |
+
+### API
+
+`POST /api/v1/validate` — Upload & validate a single document  
+`POST /api/v1/validate/batch` — Validate multiple documents  
+`POST /api/v1/ocr/wba` — OCR Extract WBA Form (Returns structured JSON)
+`GET /api/v1/health` — Health check  
+`GET /api/v1/info` — Standards information  
+
+[→ Full API Documentation](docs/api.md)
+
+### 🧪 End-to-End Test Suite & Transparency
+
+We believe in radical transparency. The EU mandate requires 100% reliable enforcement. To prove this tool works in the real world, it includes a fully automated End-to-End (E2E) Test Suite that fetches real files (both valid and invalid) from the web and validates them against the API.
+
+#### What the tests prove:
+1. **Unsupported File Format:** Rejects files that are not strictly ODF or PDF, preventing malicious uploads.
+2. **Fake PDF:** Catches corrupted files that try to spoof the PDF magic bytes (`%PDF`).
+3. **Real PDF (but not PDF/UA):** Correctly flags a standard, working PDF as `invalid` because it lacks semantic tags and alt-texts (Matterhorn Protocol failure).
+4. **Real ODT:** Successfully parses a real open standard document and returns the exact XML structure warnings.
+
+#### Running the tests yourself:
+```bash
+./tests/e2e/test-api.sh
+```
+
 ---
 
-## 🤖 WBA AI OCR Engine (New!)
+<a name="deutsch"></a>
+## 🇩🇪 Deutsch
 
-Behörden-Formulare manuell abzutippen kostet Millionen an Steuergeldern.
-`deutschland-stack-tools` kommt jetzt mit einer eingebauten **autarken AI Vision Engine** zur Datenextraktion, speziell optimiert für den **"Weiterbewilligungsantrag SGB II" (WBA)**.
+> **Der automatisierte Compliance-Türsteher für die deutsche Verwaltung.**
+> Gebaut in 168 Minuten, um den PDF/UA- und ODF-Flaschenhals der EU zu lösen.
+> Kostenlos. Open Source. Self-hostable.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](https://ghcr.io/xheen908/deutschland-stack-tools)
+[![Tests](https://img.shields.io/badge/tests-passing-success.svg)](#)
+[![Built for Deutschland-Stack](https://img.shields.io/badge/built%20for-Deutschland--Stack-black)](#)
+
+### Die 168-Minuten-Geschichte 🚀
+
+Am 18. Juni 2026 feierten Bund und Länder einen "Durchbruch" für den **Deutschland-Stack**: Die verpflichtende Einführung echter digitaler Souveränität (ODF) und vollständiger EU-Barrierefreiheit (PDF/UA) für alle öffentlichen Dokumente.
+
+Doch die flächendeckende Durchsetzung ist ein gewaltiges Infrastrukturproblem. Wie verhindert man automatisch, dass Millionen von proprietären oder nicht barrierefreien Dokumenten in Behördensysteme gelangen? Experten warnten: *"Das Mandat muss von strengen Qualitätskriterien begleitet werden, sonst zwingen wir die Behörden, ungeeignete Lösungen zu nutzen."*
+
+**Die Lösung brauchte kein 3-jähriges Millionenprojekt der Regierung.**
+Sie dauerte 168 Minuten an einem Sonntagnachmittag.
+
+`deutschland-stack-tools` ist die fehlende Brücke: Ein blitzschneller, als Docker-Container verpackter Node.js Microservice, der die offiziellen Validierungs-Engines (veraPDF & ODF-Toolkit) umschließt. Er fungiert als **automatisierter Türsteher** für jedes Behörden-CMS oder -Portal. Fehlen einem Dokument Alt-Texte für Blinde oder versteckt es proprietären Code, blockiert die API den Upload in Millisekunden.
+
+Wir haben die Mautstelle für digitale Souveränität gebaut. Bereit für den Einsatz.
+
+### Schnellstart
+
+#### Docker (30 Sekunden)
+```bash
+# Standard Validierungs-Server
+docker run -p 3000:3000 ghcr.io/xheen908/deutschland-stack-tools:latest
+curl -F "file=@dokument.odt" http://localhost:3000/api/v1/validate
+
+# MIT aktivierter KI OCR-Engine (benötigt lokales Ollama auf Mac/Windows)
+docker run -p 3000:3000 -e OLLAMA_API_URL="http://host.docker.internal:11434/api/generate" ghcr.io/xheen908/deutschland-stack-tools:latest
+```
+
+#### CLI
+```bash
+npm install -g deutschland-stack-tools
+dst validate dokument.odt
+dst validate bericht.pdf
+dst batch ./dokumente/ --report report.json
+
+# Extrahiere WBA-Formular via lokaler KI-Vision-Engine
+dst ocr wba ./eingescannter_antrag.pdf
+```
+
+### 🤖 WBA AI OCR Engine (Neu!)
+
+Behörden-Formulare manuell abzutippen kostet Millionen an Steuergeldern. `deutschland-stack-tools` kommt jetzt mit einer eingebauten **autarken AI Vision Engine** zur Datenextraktion, speziell optimiert für den **"Weiterbewilligungsantrag SGB II" (WBA)**.
 
 - **100% DSGVO-Konform:** Die Daten (wie BG-Nummer, Anschrift, Einkommen) verlassen den Server niemals. Es gibt keine Cloud-API.
 - **Lokale KI:** Nutzt [Ollama](https://ollama.com/) und das 11B Parameter `llama3.2-vision` Modell direkt via `localhost:11434`.
@@ -65,76 +161,50 @@ Behörden-Formulare manuell abzutippen kostet Millionen an Steuergeldern.
 dst ocr wba ./eingescannter_antrag.pdf
 ```
 
----
-
-## What it validates
+### Was validiert wird
 
 | Standard | Details |
 |----------|---------|
 | ODF 1.2 / 1.3 / 1.4 | .odt, .ods, .odp |
 | PDF/UA-1 (ISO 14289-1) | Matterhorn Protocol, 136 checks |
-| PDF/UA-2 (ISO 14289-2) | Latest accessibility standard |
+| PDF/UA-2 (ISO 14289-2) | Neuester Barrierefreiheits-Standard |
 
----
+### API
 
-## API
+`POST /api/v1/validate` — Einzelnes Dokument hochladen & validieren  
+`POST /api/v1/validate/batch` — Mehrere Dokumente validieren  
+`POST /api/v1/ocr/wba` — OCR Extraktion WBA-Formular (gibt strukturiertes JSON zurück)
+`GET /api/v1/health` — Health Check  
+`GET /api/v1/info` — Standards Informationen  
 
-`POST /api/v1/validate` — Upload & validate a single document  
-`POST /api/v1/validate/batch` — Validate multiple documents  
-`POST /api/v1/ocr/wba` — OCR Extract WBA Form (Returns structured JSON)
-`GET /api/v1/health` — Health check  
-`GET /api/v1/info` — Standards information  
+[→ Zur vollständigen API-Dokumentation](docs/api.md)
 
-[→ Full API Documentation](docs/api.md)
+### 🧪 End-to-End Test-Suite & Transparenz
 
----
+Wir glauben an radikale Transparenz. Das EU-Mandat erfordert eine 100% zuverlässige Durchsetzung. Um zu beweisen, dass dieses Tool in der realen Welt funktioniert, enthält es eine vollautomatische End-to-End (E2E) Test-Suite, die echte Dateien (sowohl gültige als auch ungültige) aus dem Internet abruft und gegen die API validiert.
 
-## 🧪 End-to-End Test Suite & Transparency
+#### Was die Tests beweisen:
+1. **Unsupported File Format:** Lehnt Dateien ab, die nicht strikt ODF oder PDF sind, und verhindert so schädliche Uploads.
+2. **Fake PDF (Parsing Fehler):** Erkennt beschädigte Dateien, die versuchen, die PDF Magic Bytes (`%PDF`) vorzutäuschen.
+3. **Echtes PDF (aber nicht PDF/UA):** Markiert ein Standard-PDF korrekterweise als `invalid`, da ihm semantische Tags und Alt-Texte fehlen (Matterhorn-Protokoll-Fehler).
+4. **Echtes ODT:** Parst ein echtes Open-Standard-Dokument erfolgreich und gibt exakte Warnungen zur XML-Struktur zurück.
+5. **WBA OCR API Endpoint:** Extrahiert echte Handschrift und Checkboxen aus Behördenformularen in sauberes JSON.
 
-We believe in radical transparency. The EU mandate requires 100% reliable enforcement. To prove this tool works in the real world, it includes a fully automated End-to-End (E2E) Test Suite that fetches real files (both valid and invalid) from the web and validates them against the API.
-
-### What the tests prove:
-1. **Unsupported File Format:** Rejects files that are not strictly ODF or PDF, preventing malicious uploads.
-2. **Fake PDF (Parsing Fehler):** Catches corrupted files that try to spoof the PDF magic bytes (`%PDF`).
-3. **Echtes PDF (aber nicht PDF/UA):** Correctly flags a standard, working PDF as `invalid` because it lacks semantic tags and alt-texts (Matterhorn Protocol failure).
-4. **Echtes ODT (Sollte Valid oder Warning sein):** Successfully parses a real open standard document and returns the exact XML structure warnings.
-
-### Running the tests yourself:
+#### Führe die Tests selbst aus:
 ```bash
 ./tests/e2e/test-api.sh
 ```
 
-### Example Test Run Output:
-```text
-=============================================
-Deutschland-Stack-Tools E2E Testsuite
-API Base URL: http://localhost:3000/api/v1
-=============================================
-Lade Testdateien herunter...
-Starte Tests...
----------------------------------------------
-Test: Unsupported File Format ... ✅ BESTANDEN (UNSUPPORTED_FORMAT erkannt)
-Test: Fake PDF (Parsing Fehler) ... ✅ BESTANDEN
-Test: Echtes PDF (aber nicht PDF/UA) ... ✅ BESTANDEN
-Test: Echtes ODT (Sollte Valid oder Warning sein) ... ✅ BESTANDEN
-Test: WBA OCR API Endpoint ... ✅ BESTANDEN (JSON extrahiert)
----------------------------------------------
-Tests abgeschlossen.
-✅ Bestanden: 5
-```
-
 ---
 
-## Built with
+### Built with / Technologien
 
 - [Apache ODF Toolkit](https://odftoolkit.org) — ODF validation engine
 - [veraPDF](https://verapdf.org) — PDF/UA validation engine  
 - [Fastify](https://fastify.dev) — REST API framework
 - [Commander.js](https://github.com/tj/commander.js) — CLI framework
 
----
-
-## Legal basis
+### Legal basis / Rechtliche Grundlage
 
 - Deutschland-Stack Beschluss, 18. Juni 2026
 - [OSBA Open Source Wettbewerb 2026](https://open-source-wettbewerb.de)
@@ -142,5 +212,4 @@ Tests abgeschlossen.
 - PDF/UA: ISO 14289-1:2014 / ISO 14289-2:2024
 
 ---
-
 *Made in Duisburg 🇩🇪 · MIT License · Self-hostable · No vendor lock-in*
