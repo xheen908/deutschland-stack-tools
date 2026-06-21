@@ -3,7 +3,7 @@ import path from 'path';
 import { execSync } from 'child_process';
 import { WBAData } from '../types/wba';
 
-const OLLAMA_URL = 'http://localhost:11434/api/generate';
+const OLLAMA_URL = process.env.OLLAMA_API_URL || 'http://localhost:11434/api/generate';
 const MODEL = 'llama3.2-vision';
 
 /**
