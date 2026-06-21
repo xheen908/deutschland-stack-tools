@@ -2,6 +2,7 @@ import { Command } from 'commander';
 import { validateCmd } from './commands/validate';
 import { batchCmd } from './commands/batch';
 import { infoCmd } from './commands/info';
+import { ocrCmd } from './commands/ocr';
 
 export const buildCli = (): Command => {
   const program = new Command();
@@ -14,6 +15,7 @@ export const buildCli = (): Command => {
   program.addCommand(validateCmd());
   program.addCommand(batchCmd());
   program.addCommand(infoCmd());
+  program.addCommand(ocrCmd());
 
   return program;
 };
