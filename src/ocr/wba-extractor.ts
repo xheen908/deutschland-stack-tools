@@ -80,7 +80,6 @@ export async function extractWBA(filePath: string): Promise<WBAData> {
      }`
   ];
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let finalJson: any = {};
 
   for (let i = 0; i < base64Images.length; i++) {
