@@ -80,6 +80,7 @@ export async function extractWBA(filePath: string): Promise<WBAData> {
      }`
   ];
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let finalJson: any = {};
 
   for (let i = 0; i < base64Images.length; i++) {
@@ -115,7 +116,7 @@ Gib NUR das JSON-Objekt zurück.
     try {
       const pageJson = JSON.parse(data.response);
       finalJson = { ...finalJson, ...pageJson };
-    } catch (e) {
+    } catch {
       console.error(`Fehler beim Parsen von Seite ${i + 1}`);
     }
   }

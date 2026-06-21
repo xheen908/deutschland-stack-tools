@@ -22,8 +22,8 @@ export const ocrCmd = (): Command => {
         
         logger.info('Extraction completed successfully. Result:');
         console.log(JSON.stringify(result, null, 2));
-      } catch (err: any) {
-        logger.error(`OCR Extraction failed: ${err.message}`);
+      } catch (err) {
+        logger.error(`OCR Extraction failed: ${(err as Error).message}`);
         process.exit(1);
       }
     });
