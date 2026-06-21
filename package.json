@@ -1,0 +1,47 @@
+{
+  "name": "deutschland-stack-tools",
+  "version": "1.0.0",
+  "description": "ODF & PDF/UA compliance validator for Germany's Deutschland-Stack",
+  "bin": {
+    "dst": "./bin/dst"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts serve",
+    "serve": "node dist/index.js serve",
+    "test": "jest --coverage",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit",
+    "docker:build": "docker build -t deutschland-stack-tools .",
+    "docker:run": "docker run -p 3000:3000 deutschland-stack-tools"
+  },
+  "dependencies": {
+    "fastify": "^4.x",
+    "@fastify/multipart": "^8.x",
+    "@fastify/rate-limit": "^9.x",
+    "commander": "^12.x",
+    "pino": "^9.x",
+    "pino-pretty": "^11.x"
+  },
+  "devDependencies": {
+    "typescript": "^5.x",
+    "@types/node": "^24.x",
+    "jest": "^29.x",
+    "ts-jest": "^29.x",
+    "eslint": "^9.x",
+    "@typescript-eslint/parser": "^8.x",
+    "@typescript-eslint/eslint-plugin": "^8.x",
+    "@types/jest": "^29.x"
+  },
+  "keywords": [
+    "odf",
+    "pdf-ua",
+    "validator",
+    "deutschland-stack",
+    "open-source",
+    "compliance",
+    "verwaltung",
+    "digitale-souveraenität"
+  ],
+  "license": "MIT"
+}

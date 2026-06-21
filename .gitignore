@@ -1,0 +1,8 @@
+node_modules/
+dist/
+/tmp/
+.env
+*.jar
+*.zip
+coverage/
+.DS_Store
