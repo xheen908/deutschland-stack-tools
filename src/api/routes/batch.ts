@@ -3,6 +3,7 @@ import { processFileValidation } from '../../validators';
 import { createTempFile } from '../../utils/tempfiles';
 import { UnsupportedFormatError } from '../../validators/detector';
 import fs from 'fs/promises';
+import { createWriteStream } from 'fs';
 import { pipeline } from 'stream/promises';
 
 export default async function batchRoute(fastify: FastifyInstance) {
@@ -21,7 +22,7 @@ export default async function batchRoute(fastify: FastifyInstance) {
         total++;
         const ctx = await createTempFile(part.filename);
         try {
-          await pipeline(part.file, require('fs').createWriteStream(ctx.filepath));
+          await pipeline(part.file, createWriteStream(ctx.filepath));
           const stats = await fs.stat(ctx.filepath);
           
           const result = await processFileValidation(ctx.filepath, part.filename, stats.size, 'auto', false);

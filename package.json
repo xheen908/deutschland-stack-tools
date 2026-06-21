@@ -16,22 +16,22 @@
     "docker:run": "docker run -p 3000:3000 deutschland-stack-tools"
   },
   "dependencies": {
-    "fastify": "^4.x",
     "@fastify/multipart": "^8.x",
     "@fastify/rate-limit": "^9.x",
     "commander": "^12.x",
+    "fastify": "^4.x",
     "pino": "^9.x",
     "pino-pretty": "^11.x"
   },
   "devDependencies": {
-    "typescript": "^5.x",
+    "@eslint/js": "^9.39.4",
+    "@types/jest": "^29.x",
     "@types/node": "^24.x",
+    "eslint": "^9.x",
     "jest": "^29.x",
     "ts-jest": "^29.x",
-    "eslint": "^9.x",
-    "@typescript-eslint/parser": "^8.x",
-    "@typescript-eslint/eslint-plugin": "^8.x",
-    "@types/jest": "^29.x"
+    "typescript": "^5.x",
+    "typescript-eslint": "^8.61.1"
   },
   "keywords": [
     "odf",

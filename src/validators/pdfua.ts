@@ -6,7 +6,7 @@ const VERAPDF_BIN = process.env.VERAPDF_BIN || 'verapdf';
 
 export const validatePdfUa = async (filepath: string): Promise<PdfUaValidationResult> => {
   try {
-    const { stdout, stderr, exitCode } = await runSubprocess(VERAPDF_BIN, [
+    const { stdout, stderr } = await runSubprocess(VERAPDF_BIN, [
       '--format',
       'json',
       '--flavour',

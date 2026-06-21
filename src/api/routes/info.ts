@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 
 export default async function infoRoute(fastify: FastifyInstance) {
-  fastify.get('/info', async (request, reply) => {
+  fastify.get('/info', async (_request, _reply) => {
     return {
       service: 'deutschland-stack-tools',
       version: process.env.npm_package_version || '1.0.0',

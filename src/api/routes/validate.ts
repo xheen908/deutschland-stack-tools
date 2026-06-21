@@ -3,6 +3,7 @@ import { processFileValidation } from '../../validators';
 import { createTempFile } from '../../utils/tempfiles';
 import { UnsupportedFormatError } from '../../validators/detector';
 import fs from 'fs/promises';
+import { createWriteStream } from 'fs';
 import { pipeline } from 'stream/promises';
 
 export default async function validateRoute(fastify: FastifyInstance) {
@@ -21,7 +22,7 @@ export default async function validateRoute(fastify: FastifyInstance) {
     
     try {
       // Save file to disk
-      await pipeline(file, require('fs').createWriteStream(ctx.filepath));
+      await pipeline(file, createWriteStream(ctx.filepath));
       
       const stats = await fs.stat(ctx.filepath);
       
