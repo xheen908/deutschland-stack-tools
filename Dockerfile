@@ -12,7 +12,7 @@ RUN npm run build
 FROM node:24-alpine AS runtime
 
 # Java JRE for ODFValidator and veraPDF
-RUN apk add --no-cache openjdk11-jre wget
+RUN apk add --no-cache openjdk11-jre wget unzip
 
 WORKDIR /app
 
@@ -23,7 +23,10 @@ COPY package.json ./
 COPY tools/ ./tools/
 
 # Download ODF Validator into tools folder (if not copied)
-RUN wget -q -O tools/odfvalidator.jar https://github.com/tdf/odftoolkit/releases/download/v0.13.0/odfvalidator-0.13.0-jar-with-dependencies.jar
+RUN wget -q -O /tmp/odftoolkit.zip https://github.com/tdf/odftoolkit/releases/download/v0.13.0/odftoolkit-0.13.0-bin.zip \
+    && unzip -q /tmp/odftoolkit.zip odfvalidator-0.13.0-jar-with-dependencies.jar -d tools/ \
+    && mv tools/odfvalidator-0.13.0-jar-with-dependencies.jar tools/odfvalidator.jar \
+    && rm /tmp/odftoolkit.zip
 
 # Copy veraPDF from official image
 COPY --from=verapdf /opt/verapdf /opt/verapdf
