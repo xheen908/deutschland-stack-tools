@@ -61,21 +61,23 @@ const parsePdfUaOutput = (stdout: string, stderr: string): PdfUaValidationResult
        };
     }
 
-    const isCompliant = job.validationReport.isCompliant;
+    const isCompliant = job.validationReport.compliant;
     const profileName = job.validationReport.profileName || 'Unknown PDF/UA Profile';
-    const rules = job.validationReport.details?.failedRules || [];
+    const rules = job.validationReport.details?.ruleSummaries || [];
 
     const errors: ValidationIssue[] = [];
     const warnings: ValidationIssue[] = [];
 
     // Map Matterhorn Protocol failures
     for (const rule of rules) {
-      errors.push({
-        code: rule.ruleId?.specification + '-' + rule.ruleId?.clause,
-        message: rule.description || 'Matterhorn Protocol Failure',
-        severity: 'error',
-        location: rule.object || 'Document',
-      });
+      if (rule.ruleStatus === 'FAILED' || rule.status === 'failed') {
+        errors.push({
+          code: rule.specification + '-' + rule.clause,
+          message: rule.description || 'Matterhorn Protocol Failure',
+          severity: 'error',
+          location: rule.object || 'Document',
+        });
+      }
     }
 
     return {
