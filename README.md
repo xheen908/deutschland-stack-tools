@@ -65,6 +65,41 @@ dst batch ./dokumente/ --report report.json
 
 ---
 
+## 🧪 End-to-End Test Suite & Transparency
+
+We believe in radical transparency. The EU mandate requires 100% reliable enforcement. To prove this tool works in the real world, it includes a fully automated End-to-End (E2E) Test Suite that fetches real files (both valid and invalid) from the web and validates them against the API.
+
+### What the tests prove:
+1. **Unsupported File Format:** Rejects files that are not strictly ODF or PDF, preventing malicious uploads.
+2. **Fake PDF (Parsing Fehler):** Catches corrupted files that try to spoof the PDF magic bytes (`%PDF`).
+3. **Echtes PDF (aber nicht PDF/UA):** Correctly flags a standard, working PDF as `invalid` because it lacks semantic tags and alt-texts (Matterhorn Protocol failure).
+4. **Echtes ODT (Sollte Valid oder Warning sein):** Successfully parses a real open standard document and returns the exact XML structure warnings.
+
+### Running the tests yourself:
+```bash
+./tests/e2e/test-api.sh
+```
+
+### Example Test Run Output:
+```text
+=============================================
+Deutschland-Stack-Tools E2E Testsuite
+API URL: http://localhost:3000/api/v1/validate
+=============================================
+Lade Testdateien herunter...
+Starte Tests...
+---------------------------------------------
+Test: Unsupported File Format ... ✅ BESTANDEN (UNSUPPORTED_FORMAT erkannt)
+Test: Fake PDF (Parsing Fehler) ... ✅ BESTANDEN
+Test: Echtes PDF (aber nicht PDF/UA) ... ✅ BESTANDEN
+Test: Echtes ODT (Sollte Valid oder Warning sein) ... ✅ BESTANDEN
+---------------------------------------------
+Tests abgeschlossen.
+✅ Bestanden: 4
+```
+
+---
+
 ## Built with
 
 - [Apache ODF Toolkit](https://odftoolkit.org) — ODF validation engine
