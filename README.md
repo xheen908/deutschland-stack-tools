@@ -40,6 +40,25 @@ npm install -g deutschland-stack-tools
 dst validate dokument.odt
 dst validate bericht.pdf
 dst batch ./dokumente/ --report report.json
+
+# Extract WBA Form via local AI Vision Engine
+dst ocr wba ./test-real-wba-scanned.pdf
+```
+
+---
+
+## 🤖 WBA AI OCR Engine (New!)
+
+Behörden-Formulare manuell abzutippen kostet Millionen an Steuergeldern.
+`deutschland-stack-tools` kommt jetzt mit einer eingebauten **autarken AI Vision Engine** zur Datenextraktion, speziell optimiert für den **"Weiterbewilligungsantrag SGB II" (WBA)**.
+
+- **100% DSGVO-Konform:** Die Daten (wie BG-Nummer, Anschrift, Einkommen) verlassen den Server niemals. Es gibt keine Cloud-API.
+- **Lokale KI:** Nutzt [Ollama](https://ollama.com/) und das 11B Parameter `llama3.2-vision` Modell direkt via `localhost:11434`.
+- **Page-by-Page Extraction:** Umgeht das Kontext-Limit von Open Source Vision Modellen durch iteratives Prompting pro PDF-Seite und mergt die Ergebnisse zu einem maschinenlesbaren, strukturierten JSON.
+- **Handschrift-Korrektur:** Erkennt angekreuzte Checkboxen und korrigiert typische KI-Lesefehler bei deutscher Handschrift automatisch (z.B. "ß" vs "b").
+
+```bash
+dst ocr wba ./eingescannter_antrag.pdf
 ```
 
 ---
