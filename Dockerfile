@@ -1,3 +1,5 @@
+FROM verapdf/cli:latest AS verapdf
+
 # Stage 1: Build
 FROM node:24-alpine AS builder
 WORKDIR /app
@@ -9,14 +11,12 @@ RUN npm run build
 # Stage 2: Runtime
 FROM node:24-alpine AS runtime
 
-# Java JRE for ODFValidator and unzip for veraPDF
-RUN apk add --no-cache openjdk11-jre unzip
+# Java JRE for ODFValidator and veraPDF
+RUN apk add --no-cache openjdk11-jre
 
-# Install veraPDF
-RUN wget -q https://github.com/veraPDF/veraPDF-apps/releases/download/v1.26.2/verapdf-1.26.2.zip \
-    && unzip -q verapdf-1.26.2.zip -d /opt/ \
-    && rm verapdf-1.26.2.zip \
-    && ln -s /opt/verapdf-1.26.2/verapdf /usr/local/bin/verapdf
+# Copy veraPDF from official image
+COPY --from=verapdf /opt/verapdf /opt/verapdf
+RUN ln -s /opt/verapdf/verapdf /usr/local/bin/verapdf
 
 WORKDIR /app
 COPY --from=builder /app/dist ./dist
