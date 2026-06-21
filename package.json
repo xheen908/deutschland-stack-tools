@@ -6,7 +6,7 @@
     "dst": "./bin/dst"
   },
   "scripts": {
-    "build": "tsc && cp src/ocr/*.py dist/ocr/ 2>/dev/null || true",
+    "build": "tsc",
     "dev": "ts-node src/index.ts serve",
     "serve": "node dist/index.js serve",
     "test": "jest --coverage",

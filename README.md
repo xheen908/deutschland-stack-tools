@@ -33,12 +33,8 @@ We built the tollbooth for digital sovereignty. Ready to deploy.
 
 #### Docker (30 seconds)
 ```bash
-# Standard validation server
 docker run -p 3000:3000 ghcr.io/xheen908/deutschland-stack-tools:latest
 curl -F "file=@dokument.odt" http://localhost:3000/api/v1/validate
-
-# WITH AI OCR Engine enabled (requires local Ollama on Mac/Windows)
-docker run -p 3000:3000 -e OLLAMA_API_URL="http://host.docker.internal:11434/api/generate" ghcr.io/xheen908/deutschland-stack-tools:latest
 ```
 
 #### CLI
@@ -47,22 +43,6 @@ npm install -g deutschland-stack-tools
 dst validate dokument.odt
 dst validate bericht.pdf
 dst batch ./dokumente/ --report report.json
-
-# Extract WBA Form via local AI Vision Engine
-dst ocr wba ./test-real-wba-scanned.pdf
-```
-
-### 🤖 WBA AI OCR Engine (New!)
-
-Manually typing in government forms costs millions of taxpayer euros. `deutschland-stack-tools` now comes with a built-in, **autonomous AI Vision Engine** for data extraction, specifically optimized for the **"Weiterbewilligungsantrag SGB II" (WBA)** welfare form.
-
-- **100% GDPR-Compliant:** Data (like IDs, addresses, income) never leaves the server. There is no cloud API.
-- **Local AI:** Uses [Ollama](https://ollama.com/) and the 11B parameter `llama3.2-vision` model directly via `localhost:11434`.
-- **Page-by-Page Extraction:** Bypasses the context limit of open-source vision models via iterative prompting per page and merges the results into a machine-readable JSON.
-- **Handwriting Correction:** Detects checked boxes and automatically corrects typical AI reading errors in German handwriting.
-
-```bash
-dst ocr wba ./scanned_form.pdf
 ```
 
 ### What it validates
@@ -77,7 +57,6 @@ dst ocr wba ./scanned_form.pdf
 
 `POST /api/v1/validate` — Upload & validate a single document  
 `POST /api/v1/validate/batch` — Validate multiple documents  
-`POST /api/v1/ocr/wba` — OCR Extract WBA Form (Returns structured JSON)
 `GET /api/v1/health` — Health check  
 `GET /api/v1/info` — Standards information  
 
@@ -129,12 +108,8 @@ Wir haben die Mautstelle für digitale Souveränität gebaut. Bereit für den Ei
 
 #### Docker (30 Sekunden)
 ```bash
-# Standard Validierungs-Server
 docker run -p 3000:3000 ghcr.io/xheen908/deutschland-stack-tools:latest
 curl -F "file=@dokument.odt" http://localhost:3000/api/v1/validate
-
-# MIT aktivierter KI OCR-Engine (benötigt lokales Ollama auf Mac/Windows)
-docker run -p 3000:3000 -e OLLAMA_API_URL="http://host.docker.internal:11434/api/generate" ghcr.io/xheen908/deutschland-stack-tools:latest
 ```
 
 #### CLI
@@ -143,22 +118,6 @@ npm install -g deutschland-stack-tools
 dst validate dokument.odt
 dst validate bericht.pdf
 dst batch ./dokumente/ --report report.json
-
-# Extrahiere WBA-Formular via lokaler KI-Vision-Engine
-dst ocr wba ./eingescannter_antrag.pdf
-```
-
-### 🤖 WBA AI OCR Engine (Neu!)
-
-Behörden-Formulare manuell abzutippen kostet Millionen an Steuergeldern. `deutschland-stack-tools` kommt jetzt mit einer eingebauten **autarken AI Vision Engine** zur Datenextraktion, speziell optimiert für den **"Weiterbewilligungsantrag SGB II" (WBA)**.
-
-- **100% DSGVO-Konform:** Die Daten (wie BG-Nummer, Anschrift, Einkommen) verlassen den Server niemals. Es gibt keine Cloud-API.
-- **Lokale KI:** Nutzt [Ollama](https://ollama.com/) und das 11B Parameter `llama3.2-vision` Modell direkt via `localhost:11434`.
-- **Page-by-Page Extraction:** Umgeht das Kontext-Limit von Open Source Vision Modellen durch iteratives Prompting pro PDF-Seite und mergt die Ergebnisse zu einem maschinenlesbaren, strukturierten JSON.
-- **Handschrift-Korrektur:** Erkennt angekreuzte Checkboxen und korrigiert typische KI-Lesefehler bei deutscher Handschrift automatisch (z.B. "ß" vs "b").
-
-```bash
-dst ocr wba ./eingescannter_antrag.pdf
 ```
 
 ### Was validiert wird
@@ -173,7 +132,6 @@ dst ocr wba ./eingescannter_antrag.pdf
 
 `POST /api/v1/validate` — Einzelnes Dokument hochladen & validieren  
 `POST /api/v1/validate/batch` — Mehrere Dokumente validieren  
-`POST /api/v1/ocr/wba` — OCR Extraktion WBA-Formular (gibt strukturiertes JSON zurück)
 `GET /api/v1/health` — Health Check  
 `GET /api/v1/info` — Standards Informationen  
 
@@ -188,7 +146,6 @@ Wir glauben an radikale Transparenz. Das EU-Mandat erfordert eine 100% zuverläs
 2. **Fake PDF (Parsing Fehler):** Erkennt beschädigte Dateien, die versuchen, die PDF Magic Bytes (`%PDF`) vorzutäuschen.
 3. **Echtes PDF (aber nicht PDF/UA):** Markiert ein Standard-PDF korrekterweise als `invalid`, da ihm semantische Tags und Alt-Texte fehlen (Matterhorn-Protokoll-Fehler).
 4. **Echtes ODT:** Parst ein echtes Open-Standard-Dokument erfolgreich und gibt exakte Warnungen zur XML-Struktur zurück.
-5. **WBA OCR API Endpoint:** Extrahiert echte Handschrift und Checkboxen aus Behördenformularen in sauberes JSON.
 
 #### Führe die Tests selbst aus:
 ```bash

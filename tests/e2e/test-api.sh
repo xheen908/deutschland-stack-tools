@@ -54,20 +54,6 @@ run_test() {
         return
     fi
 
-    # OCR Special Check
-    if [ "$endpoint" == "/ocr/wba" ]; then
-        doc_type=$(echo "$response" | jq -r '.antrags_metadaten.dokumenten_typ // empty')
-        if [[ "$doc_type" == *"WBA"* || "$doc_type" == *"Antrag"* ]]; then
-            echo "✅ BESTANDEN (JSON extrahiert)"
-            ((passed++))
-        else
-            echo "❌ FEHLGESCHLAGEN"
-            echo "Erwartet WBA JSON, Bekommen: $response"
-            ((failed++))
-        fi
-        return
-    fi
-    
     # Check validation status
     status=$(echo "$response" | jq -r '.status // empty')
     if [[ "$status" == "$expected_status" || ( "$expected_status" == "valid" && "$status" == "warning" ) ]]; then
@@ -95,13 +81,6 @@ run_test "Unsupported File Format" "/tmp/dst_e2e_tests/test.txt" "" "UNSUPPORTED
 run_test "Fake PDF (Parsing Fehler)" "/tmp/dst_e2e_tests/fake.pdf" "invalid" "false"
 run_test "Echtes PDF (aber nicht PDF/UA)" "/tmp/dst_e2e_tests/real-invalid.pdf" "invalid" "false"
 run_test "Echtes ODT (Sollte Valid oder Warning sein)" "/tmp/dst_e2e_tests/real-valid.odt" "valid" "false"
-
-if [ "$CI" == "true" ]; then
-    echo "Test: WBA OCR API Endpoint ... ⏭️  ÜBERSPRUNGEN (CI Environment)"
-else
-    # Wir nutzen das im Projekt liegende wba-dummy.pdf für diesen Test
-    run_test "WBA OCR API Endpoint" "./tests/fixtures/wba-dummy.pdf" "valid" "false" "/ocr/wba"
-fi
 
 echo "---------------------------------------------"
 echo "Tests abgeschlossen."

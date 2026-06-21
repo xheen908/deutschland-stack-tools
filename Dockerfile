@@ -11,9 +11,8 @@ RUN npm run build
 # Stage 2: Runtime
 FROM node:24-alpine AS runtime
 
-# Java JRE for ODFValidator and veraPDF, plus Python for OCR PDF extraction
-RUN apk add --no-cache openjdk11-jre wget unzip python3 py3-pip poppler-utils
-RUN pip3 install --break-system-packages pdf2image Pillow
+# Java JRE for ODFValidator and veraPDF
+RUN apk add --no-cache openjdk11-jre wget unzip
 
 WORKDIR /app
 

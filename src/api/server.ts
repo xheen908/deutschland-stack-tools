@@ -8,7 +8,6 @@ import healthRoute from './routes/health';
 import infoRoute from './routes/info';
 import validateRoute from './routes/validate';
 import batchRoute from './routes/batch';
-import ocrRoute from './routes/ocr';
 
 export const buildServer = async (): Promise<FastifyInstance> => {
   const server = Fastify({
@@ -46,7 +45,6 @@ export const buildServer = async (): Promise<FastifyInstance> => {
   server.register(infoRoute, { prefix: '/api/v1' });
   server.register(validateRoute, { prefix: '/api/v1' });
   server.register(batchRoute, { prefix: '/api/v1' });
-  server.register(ocrRoute, { prefix: '/api/v1' });
 
   // Custom error handler
   server.setErrorHandler((error, request, reply) => {
