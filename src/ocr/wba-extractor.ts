@@ -120,14 +120,28 @@ Gib NUR das JSON-Objekt zurück.
     }
   }
 
-  // Merge fortsetzung fields
-  if (finalJson.einkommen && finalJson.einkommen_fortsetzung) {
-    finalJson.einkommen = { ...finalJson.einkommen, ...finalJson.einkommen_fortsetzung };
+  // Merge fortsetzung fields safely
+  if (finalJson.einkommen_fortsetzung) {
+    finalJson.einkommen = { ...(finalJson.einkommen || {}), ...finalJson.einkommen_fortsetzung };
     delete finalJson.einkommen_fortsetzung;
   }
-  if (finalJson.aenderungen && finalJson.aenderungen_fortsetzung) {
-    finalJson.aenderungen = { ...finalJson.aenderungen, ...finalJson.aenderungen_fortsetzung };
+  if (finalJson.aenderungen_fortsetzung) {
+    finalJson.aenderungen = { ...(finalJson.aenderungen || {}), ...finalJson.aenderungen_fortsetzung };
     delete finalJson.aenderungen_fortsetzung;
+  }
+
+  // Ensure core keys are at least defined
+  finalJson.antrags_metadaten = finalJson.antrags_metadaten || {};
+  finalJson.persoenliche_daten = finalJson.persoenliche_daten || {};
+  finalJson.kosten_unterkunft = finalJson.kosten_unterkunft || {};
+  finalJson.einkommen = finalJson.einkommen || {};
+  finalJson.aenderungen = finalJson.aenderungen || {};
+  finalJson.abschluss = finalJson.abschluss || {};
+
+  // Post-Processing: Fix common OCR handwriting errors
+  if (finalJson.persoenliche_daten?.anschrift?.strasse) {
+    // LLMs often confuse handwritten 'ß' with 'b'
+    finalJson.persoenliche_daten.anschrift.strasse = finalJson.persoenliche_daten.anschrift.strasse.replace(/strabe/i, 'straße');
   }
 
   return finalJson as WBAData;
