@@ -89,7 +89,7 @@ export const processFileValidation = async (
     processing_time_ms: processingTimeMs,
     validator_versions: {
       odf_validator: '0.13.0',
-      verapdf: '1.26.2',
+      verapdf: '1.30.2',
     },
   };
 };
