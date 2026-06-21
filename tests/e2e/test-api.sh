@@ -1,11 +1,11 @@
 #!/bin/bash
 # End-to-End API Testsuite für Deutschland-Stack-Tools
 
-API_URL=${1:-"http://localhost:3000/api/v1/validate"}
+BASE_URL=${1:-"http://localhost:3000/api/v1"}
 
 echo "============================================="
 echo "Deutschland-Stack-Tools E2E Testsuite"
-echo "API URL: $API_URL"
+echo "API Base URL: $BASE_URL"
 echo "============================================="
 
 # Ensure jq is installed for parsing JSON
@@ -22,6 +22,7 @@ run_test() {
     local file_path=$2
     local expected_status=$3
     local expect_error=$4
+    local endpoint=${5:-"/validate"}
     
     echo -n "Test: $test_name ... "
     
@@ -37,7 +38,7 @@ run_test() {
         fi
     fi
 
-    response=$(curl -s -F "file=@$file_path" "$API_URL")
+    response=$(curl -s -F "file=@$file_path" "${BASE_URL}${endpoint}")
     
     # Check if we expect a hard error (like UNSUPPORTED_FORMAT)
     if [ "$expect_error" != "false" ]; then
@@ -48,6 +49,20 @@ run_test() {
         else
             echo "❌ FEHLGESCHLAGEN"
             echo "Erwartet Error: $expect_error, Bekommen: $response"
+            ((failed++))
+        fi
+        return
+    fi
+
+    # OCR Special Check
+    if [ "$endpoint" == "/ocr/wba" ]; then
+        doc_type=$(echo "$response" | jq -r '.antrags_metadaten.dokumenten_typ // empty')
+        if [[ "$doc_type" == *"WBA"* || "$doc_type" == *"Antrag"* ]]; then
+            echo "✅ BESTANDEN (JSON extrahiert)"
+            ((passed++))
+        else
+            echo "❌ FEHLGESCHLAGEN"
+            echo "Erwartet WBA JSON, Bekommen: $response"
             ((failed++))
         fi
         return
@@ -80,6 +95,13 @@ run_test "Unsupported File Format" "/tmp/dst_e2e_tests/test.txt" "" "UNSUPPORTED
 run_test "Fake PDF (Parsing Fehler)" "/tmp/dst_e2e_tests/fake.pdf" "invalid" "false"
 run_test "Echtes PDF (aber nicht PDF/UA)" "/tmp/dst_e2e_tests/real-invalid.pdf" "invalid" "false"
 run_test "Echtes ODT (Sollte Valid oder Warning sein)" "/tmp/dst_e2e_tests/real-valid.odt" "valid" "false"
+
+if [ "$CI" == "true" ]; then
+    echo "Test: WBA OCR API Endpoint ... ⏭️  ÜBERSPRUNGEN (CI Environment)"
+else
+    # Wir nutzen das im Projekt liegende wba-dummy.pdf für diesen Test
+    run_test "WBA OCR API Endpoint" "./tests/fixtures/wba-dummy.pdf" "valid" "false" "/ocr/wba"
+fi
 
 echo "---------------------------------------------"
 echo "Tests abgeschlossen."

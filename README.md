@@ -77,6 +77,7 @@ dst ocr wba ./eingescannter_antrag.pdf
 
 `POST /api/v1/validate` — Upload & validate a single document  
 `POST /api/v1/validate/batch` — Validate multiple documents  
+`POST /api/v1/ocr/wba` — OCR Extract WBA Form (Returns structured JSON)
 `GET /api/v1/health` — Health check  
 `GET /api/v1/info` — Standards information  
 
