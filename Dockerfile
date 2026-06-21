@@ -13,7 +13,7 @@ FROM node:24-alpine AS runtime
 
 # Java JRE for ODFValidator and veraPDF, plus Python for OCR PDF extraction
 RUN apk add --no-cache openjdk11-jre wget unzip python3 py3-pip poppler-utils
-RUN pip3 install --break-system-packages PyMuPDF Pillow
+RUN pip3 install --break-system-packages pdf2image Pillow
 
 WORKDIR /app
 

@@ -1,19 +1,16 @@
 import sys
 import json
-import fitz
 import base64
 import io
-from PIL import Image
+from pdf2image import convert_from_path
 
 def pdf_to_base64_images(pdf_path):
-    doc = fitz.open(pdf_path)
+    # dpi=150 is usually enough for OCR and keeps image size reasonable
+    pages = convert_from_path(pdf_path, dpi=150)
     base64_images = []
     
-    for i in range(len(doc)):
-        page = doc[i]
-        pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))
-        img = Image.open(io.BytesIO(pix.tobytes("png"))).convert("RGB")
-        
+    for img in pages:
+        img = img.convert("RGB")
         buffer = io.BytesIO()
         img.save(buffer, format="JPEG", quality=85)
         
